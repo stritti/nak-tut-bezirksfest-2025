@@ -56,8 +56,10 @@ export class NocoDBService {
         timestamp,
         amount_eur: amount,
         channel,
-        projectName,
+        project_name: projectName, // Verwende den korrekten Feldnamen für die Datenbank
       }
+      
+      console.log('Sende Donation-Daten:', donationData);
 
       const donation = await this.apiClient.post<Donation>(url, donationData)
 
@@ -108,6 +110,8 @@ export class NocoDBService {
         progress: Number(progress.toFixed(4)),
         last_donation: lastDonation,
       }
+      
+      console.log('Erstelltes Stats-Objekt:', statsObj);
 
       return statsObj
     } catch (error) {
