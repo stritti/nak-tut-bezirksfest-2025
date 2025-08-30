@@ -19,7 +19,14 @@
           <rect x="62" y="80" width="76" height="118" rx="6" />
         </clipPath>
         <pattern id="wave" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
-          <path d="M0 10 Q10 0 20 10 T40 10 V20 H0 Z" fill="#1b73e8" />
+          <path d="M0 10 Q10 0 20 10 T40 10 V20 H0 Z" fill="#1b73e8">
+            <animate attributeName="d" 
+                     values="M0 10 Q10 0 20 10 T40 10 V20 H0 Z;
+                             M0 10 Q10 20 20 10 T40 10 V20 H0 Z;
+                             M0 10 Q10 0 20 10 T40 10 V20 H0 Z" 
+                     dur="4s" 
+                     repeatCount="indefinite" />
+          </path>
         </pattern>
       </defs>
       
@@ -30,7 +37,7 @@
       </g>
       
       <!-- Prozent-Text -->
-      <text x="100" y="180" text-anchor="middle" font-size="18" fill="white" style="font-weight:600;">
+      <text x="100" y="140" text-anchor="middle" font-size="18" fill="white" style="font-weight:600; text-shadow: 0 0 3px rgba(0,0,0,0.5);">
         {{ percent }}%
       </text>
     </svg>
@@ -68,7 +75,8 @@ const formatEUR = (amount: number): string => {
 
 const totalText = computed(() => formatEUR(props.total));
 const goalText = computed(() => formatEUR(props.goal));
-const percent = computed(() => Math.round(props.progress * 100));
+// Ensure the percentage is correctly calculated and capped at 100%
+const percent = computed(() => Math.min(100, Math.round(props.progress * 100)));
 </script>
 
 <style scoped>
