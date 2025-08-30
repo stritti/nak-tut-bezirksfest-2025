@@ -1,5 +1,5 @@
 import { ApiClient } from '../api/apiClient';
-import { Settings, Donation, Stats, DonationResponse } from '../models/types';
+import type { Settings, Donation, Stats, DonationResponse } from '../models/types';
 
 /**
  * Service für die Kommunikation mit der NocoDB-API
@@ -40,7 +40,7 @@ export class NocoDBService {
     try {
       const url = `/nc/${this.projectId}/api/v1/${this.donationsTable}`;
       const timestamp = new Date().toISOString();
-      
+
       const donation = await this.apiClient.post<Donation>(url, {
         timestamp,
         amount_eur: amount,
@@ -68,18 +68,18 @@ export class NocoDBService {
     try {
       // Einstellungen abrufen
       const settings = await this.getSettings();
-      
+
       // Alle Spenden abrufen
       const donations = await this.getDonations();
-      
+
       // Gesamtbetrag berechnen
       const total = donations.reduce((sum, donation) => sum + donation.amount_eur, 0);
-      
+
       // Fortschritt berechnen (0-1)
       const progress = settings.goal_eur > 0 ? Math.min(1, total / settings.goal_eur) : 0;
-      
+
       // Letzte Spende ermitteln
-      const lastDonation = donations.length > 0 
+      const lastDonation = donations.length > 0
         ? donations.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0]
         : null;
 
