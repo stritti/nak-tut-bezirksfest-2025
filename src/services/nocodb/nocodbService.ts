@@ -56,9 +56,9 @@ export class NocoDBService {
         timestamp,
         amount_eur: amount,
         channel,
-        project_name: projectName, // Verwende den korrekten Feldnamen für die Datenbank
+        projectName,
       }
-      
+
       console.log('Sende Donation-Daten:', donationData);
 
       const donation = await this.apiClient.post<Donation>(url, donationData)
@@ -104,13 +104,13 @@ export class NocoDBService {
       // Stats-Objekt mit ID erstellen
       const statsObj: Stats = {
         id: settings.id, // ID aus den Einstellungen verwenden
-        projectName: settings.project_name,
+        projectName: settings.projectName,
         goal_eur: settings.goal_eur,
         total_eur: Number(total.toFixed(2)),
         progress: Number(progress.toFixed(4)),
         last_donation: lastDonation,
       }
-      
+
       console.log('Erstelltes Stats-Objekt:', statsObj);
 
       return statsObj

@@ -43,7 +43,7 @@ export class ApiClient {
   /**
    * POST-Anfrage an die API
    */
-  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     try {
       const response = await this.client.post<{ data?: T }>(url, data, config);
       // NocoDB v2 API gibt Daten in einem 'data' Objekt zurück
@@ -57,7 +57,7 @@ export class ApiClient {
   /**
    * PUT-Anfrage an die API
    */
-  async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     try {
       const response = await this.client.put<{ data?: T }>(url, data, config);
       // NocoDB v2 API gibt Daten in einem 'data' Objekt zurück
@@ -85,6 +85,7 @@ export class ApiClient {
   /**
    * Fehlerbehandlung für API-Anfragen
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private handleError(error: any): void {
     if (error.response) {
       // Der Server hat mit einem Statuscode außerhalb des 2xx-Bereichs geantwortet

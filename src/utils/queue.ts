@@ -6,8 +6,7 @@ export interface QueueEntry {
   amount: number;
   channel?: string;
   note?: string;
-  projectName?: string; // Für Abwärtskompatibilität
-  project_name?: string; // Korrekter Feldname für NocoDB
+  projectName?: string;
   timestamp: number;
 }
 
@@ -16,13 +15,11 @@ const STORAGE_KEY = 'pendingDonations';
 /**
  * Spende zur Queue hinzufügen
  */
-export function enqueue(amount: number, channel = 'kiosk', note = '', projectName?: string): void {
+export function enqueue(amount: number, channel = 'kiosk', projectName?: string): void {
   const queue = getQueue();
   queue.push({
     amount,
     channel,
-    note,
-    project_name: projectName, // Korrekter Feldname für NocoDB
     projectName, // Für Abwärtskompatibilität
     timestamp: Date.now()
   });
