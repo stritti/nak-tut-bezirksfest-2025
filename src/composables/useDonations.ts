@@ -42,13 +42,13 @@ export function useDonations(nocodbService: NocoDBService) {
   };
 
   // Spende hinzufügen
-  const addDonation = async (amount: number, note = '') => {
+  const addDonation = async (amount: number, statsId?: string, note = '') => {
     loading.value = true;
     message.value = null;
     error.value = null;
     
     try {
-      const response = await nocodbService.addDonation(amount, 'kiosk', note);
+      const response = await nocodbService.addDonation(amount, 'kiosk', note, statsId);
       
       if (response.success) {
         message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`;
@@ -61,7 +61,7 @@ export function useDonations(nocodbService: NocoDBService) {
       error.value = 'Spende konnte nicht gespeichert werden';
       
       // Offline-Fallback: Spende in Queue speichern
-      enqueue(amount, 'kiosk', note);
+      enqueue(amount, 'kiosk', note, statsId);
       message.value = `Offline-Modus: Ihre Spende von ${formatEUR(amount)} wird später synchronisiert.`;
     } finally {
       loading.value = false;
@@ -75,10 +75,10 @@ export function useDonations(nocodbService: NocoDBService) {
     const entries = dequeueAll();
     for (const entry of entries) {
       try {
-        await nocodbService.addDonation(entry.amount, entry.channel, entry.note);
+        await nocodbService.addDonation(entry.amount, entry.channel, entry.note, entry.statsId);
       } catch (err) {
         // Bei Fehler: Eintrag zurück in die Queue
-        enqueue(entry.amount, entry.channel, entry.note);
+        enqueue(entry.amount, entry.channel, entry.note, entry.statsId);
         break;
       }
     }

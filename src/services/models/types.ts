@@ -23,6 +23,7 @@ export interface Donation {
   amount_eur: number;
   channel: string;
   note?: string;
+  stats_id?: string; // Verknüpfung mit dem Stats-Datensatz
   created_at?: string;
   updated_at?: string;
 }
@@ -31,6 +32,7 @@ export interface Donation {
  * Statistiken für das Spendenprojekt
  */
 export interface Stats {
+  id?: string;
   projectName: string;
   goal_eur: number;
   total_eur: number;
