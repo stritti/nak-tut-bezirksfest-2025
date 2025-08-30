@@ -4,9 +4,9 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 
 ## 1. Grundlegende Infrastruktur
 
-- [ ] NocoDB-Instanz einrichten:
-  - [ ] **Settings**: Tabelle für Konfiguration (Spendenziel, Projektname, API-Token)
-  - [ ] **Donations**: Tabelle für Spendendaten (Zeitstempel, Betrag, Kanal, Notiz)
+- [x] NocoDB-Instanz einrichten:
+  - [x] **Settings**: Tabelle für Konfiguration (Spendenziel, Projektname, API-Token)
+  - [x] **Donations**: Tabelle für Spendendaten (Zeitstempel, Betrag, Kanal, Notiz)
 - [ ] NocoDB REST-API konfigurieren:
   - [ ] API-Schlüssel generieren
   - [ ] Berechtigungen für Lese- und Schreibzugriff einrichten
@@ -15,55 +15,55 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 
 ## 2. Vue.js Frontend-Entwicklung
 
-- [ ] Vue 3 Projekt mit Vite initialisieren
-- [ ] Projektstruktur gemäß Architekturrichtlinien anlegen
-- [ ] Umgebungsvariablen für API-Endpunkte konfigurieren
-- [ ] Komponenten entwickeln:
-  - [ ] ProgressWell (Brunnen-Visualisierung mit Wasserstand)
-  - [ ] Spendeneingabe-Formular mit Preset-Buttons
-  - [ ] Statusanzeige für aktuelle Spendensumme und Fortschritt
+- [x] Vue 3 Projekt mit Vite initialisieren
+- [x] Projektstruktur gemäß Architekturrichtlinien anlegen
+- [x] Umgebungsvariablen für API-Endpunkte konfigurieren
+- [x] Komponenten entwickeln:
+  - [x] ProgressWell (Brunnen-Visualisierung mit Wasserstand)
+  - [x] Spendeneingabe-Formular mit Preset-Buttons
+  - [x] Statusanzeige für aktuelle Spendensumme und Fortschritt
 
 ## 3. Service-Layer und API-Integration
 
-- [ ] API-Client für NocoDB erstellen:
-  - [ ] `fetchStats()` für Statusabfragen
-  - [ ] `postDonation()` für Spendenerfassung
-  - [ ] Repository-Pattern für den Datenzugriff implementieren
-- [ ] Offline-Funktionalität implementieren:
-  - [ ] Queue-System für nicht gesendete Spenden
-  - [ ] Automatische Synchronisierung bei Wiederverbindung
+- [x] API-Client für NocoDB erstellen:
+  - [x] `fetchStats()` für Statusabfragen
+  - [x] `postDonation()` für Spendenerfassung
+  - [x] Repository-Pattern für den Datenzugriff implementieren
+- [x] Offline-Funktionalität implementieren:
+  - [x] Queue-System für nicht gesendete Spenden
+  - [x] Automatische Synchronisierung bei Wiederverbindung
 
 ## 4. UI/UX-Design
 
-- [ ] Responsives Design für Kiosk-Modus und mobile Nutzung
-- [ ] Wasserstand-Animation für den Brunnen erstellen
-- [ ] Farbschema mit Erdtönen und Wasserblau umsetzen
-- [ ] Touch-freundliche Benutzeroberfläche gestalten
-- [ ] Feedback-Elemente für erfolgreiche Spenden einbauen
+- [x] Responsives Design für Kiosk-Modus und mobile Nutzung
+- [x] Wasserstand-Animation für den Brunnen erstellen
+- [x] Farbschema mit Erdtönen und Wasserblau umsetzen
+- [x] Touch-freundliche Benutzeroberfläche gestalten
+- [x] Feedback-Elemente für erfolgreiche Spenden einbauen
 
 ## 5. Sicherheit und Missbrauchsschutz
 
-- [ ] API-Token-Authentifizierung für NocoDB implementieren
+- [x] API-Token-Authentifizierung für NocoDB implementieren
 - [ ] CORS-Konfiguration für die NocoDB-API
-- [ ] Eingabevalidierung auf Client- und Serverseite
+- [x] Eingabevalidierung auf Client- und Serverseite
 - [ ] Rate-Limiting für API-Anfragen einrichten
 - [ ] Optional: Cloudflare Turnstile für Bot-Schutz integrieren
 
 ## 6. Erweiterungen für "Eingabe von überall"
 
-- [ ] PWA-Funktionalität hinzufügen:
-  - [ ] Service Worker für Offline-Unterstützung
-  - [ ] Web App Manifest erstellen
-  - [ ] Install-Prompt für mobile Geräte
-- [ ] QR-Code für einfachen Zugriff generieren
+- [x] PWA-Funktionalität hinzufügen:
+  - [x] Service Worker für Offline-Unterstützung
+  - [x] Web App Manifest erstellen
+  - [x] Install-Prompt für mobile Geräte
+- [x] QR-Code für einfachen Zugriff generieren (qrcode.vue installiert)
 - [ ] Optional: Einfaches Web-Formular als alternativen Eingabekanal einrichten
 
 ## 7. Optimierungen
 
-- [ ] Caching-Strategien für API-Anfragen implementieren
-- [ ] Optimistische UI-Updates für bessere Benutzererfahrung
-- [ ] Performance-Optimierungen für die Vue-App
-- [ ] Barrierefreiheit nach WCAG-Standards sicherstellen
+- [x] Caching-Strategien für API-Anfragen implementieren
+- [x] Optimistische UI-Updates für bessere Benutzererfahrung
+- [x] Performance-Optimierungen für die Vue-App
+- [x] Barrierefreiheit nach WCAG-Standards sicherstellen
 - [ ] Datenbank-Indizes für schnellere Abfragen einrichten
 
 ## 8. Deployment und Betrieb
