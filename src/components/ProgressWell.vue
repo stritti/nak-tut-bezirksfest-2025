@@ -28,17 +28,38 @@
           <rect x="62" y="80" width="76" height="118" rx="6" />
         </clipPath>
         
-        <radialGradient id="waterGradient" cx="50%" cy="50%" r="70%" fx="50%" fy="50%">
-          <stop offset="0%" style="stop-color:#64B5F6;stop-opacity:1" />
+        <linearGradient id="waterGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#90CAF9;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#1976D2;stop-opacity:1" />
-        </radialGradient>
+        </linearGradient>
         
-        <pattern id="wave" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
-          <path d="M0 10 Q10 0 20 10 T40 10 V20 H0 Z" fill="url(#waterGradient)">
+        <linearGradient id="waterGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#64B5F6;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1565C0;stop-opacity:1" />
+        </linearGradient>
+        
+        <filter id="waterBlur" x="0" y="0" width="100%" height="100%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        </filter>
+        
+        <!-- Mehrere Wellenmuster für komplexere Animation -->
+        <pattern id="wave1" x="0" y="0" width="40" height="10" patternUnits="userSpaceOnUse">
+          <path d="M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z" fill="url(#waterGradient1)">
             <animate attributeName="d" 
-                     values="M0 10 Q10 0 20 10 T40 10 V20 H0 Z;
-                             M0 10 Q10 20 20 10 T40 10 V20 H0 Z;
-                             M0 10 Q10 0 20 10 T40 10 V20 H0 Z" 
+                     values="M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z;
+                             M0 5 Q5 10 10 5 T20 5 T30 5 T40 5 V10 H0 Z;
+                             M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z" 
+                     dur="3s" 
+                     repeatCount="indefinite" />
+          </path>
+        </pattern>
+        
+        <pattern id="wave2" x="0" y="0" width="60" height="15" patternUnits="userSpaceOnUse">
+          <path d="M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z" fill="url(#waterGradient2)" opacity="0.7">
+            <animate attributeName="d" 
+                     values="M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z;
+                             M0 7.5 Q7.5 15 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z;
+                             M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z" 
                      dur="4s" 
                      repeatCount="indefinite" />
           </path>
@@ -58,35 +79,66 @@
       <!-- Schatten für die Basis -->
       <rect x="60" y="200" width="80" height="40" rx="6" fill="transparent" filter="url(#shadow)" />
       
-      <!-- Wasserfüllung mit Animation -->
+      <!-- Wasserfüllung mit verbesserter Animation -->
       <g clip-path="url(#wellCavity)">
         <!-- Hintergrund für tieferes Wasser -->
-        <rect x="62" :y="calcY + 5" width="76" :height="calcH" fill="#1565C0" opacity="0.3" />
+        <rect x="62" :y="calcY + 5" width="76" :height="calcH" fill="#0D47A1" opacity="0.2" />
         
-        <!-- Animierte Wasserwellen -->
-        <rect :y="calcY" x="62" width="76" :height="calcH" fill="url(#wave)" opacity="0.9">
+        <!-- Mehrere Wellenschichten für mehr Tiefe -->
+        <rect :y="calcY" x="62" width="76" :height="calcH" fill="url(#wave2)" opacity="0.9" filter="url(#waterBlur)">
+          <animate attributeName="x" from="62" to="32" dur="5s" repeatCount="indefinite" />
+        </rect>
+        
+        <rect :y="calcY - 3" x="62" width="76" :height="calcH" fill="url(#wave1)" opacity="0.8">
           <animate attributeName="x" from="62" to="22" dur="3s" repeatCount="indefinite" />
         </rect>
         
-        <!-- Glanzeffekt auf dem Wasser -->
+        <!-- Wellenoberfläche mit Bewegung -->
+        <path :d="`M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`" 
+              fill="#64B5F6" opacity="0.3" filter="url(#waterBlur)">
+          <animate attributeName="d" 
+                   :values="`M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z;
+                             M62 ${calcY} Q75 ${calcY + 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z;
+                             M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`" 
+                   dur="2s" 
+                   repeatCount="indefinite" />
+        </path>
+        
+        <!-- Verbesserte Glanzeffekte auf dem Wasser -->
         <ellipse 
           cx="100" 
-          :cy="calcY + 20" 
+          :cy="calcY + 15" 
           rx="30" 
-          ry="5" 
+          ry="4" 
           fill="white" 
-          opacity="0.2"
-          v-if="calcH > 30">
-          <animate attributeName="opacity" values="0.2;0.3;0.2" dur="3s" repeatCount="indefinite" />
+          opacity="0.25"
+          filter="url(#waterBlur)"
+          v-if="calcH > 20">
+          <animate attributeName="opacity" values="0.25;0.4;0.25" dur="3s" repeatCount="indefinite" />
+          <animate attributeName="rx" values="30;32;30" dur="5s" repeatCount="indefinite" />
         </ellipse>
         
-        <!-- Kleine Blasen im Wasser -->
-        <circle cx="80" :cy="calcY + calcH/2" r="2" fill="white" opacity="0.6">
-          <animate attributeName="cy" :from="calcY + calcH - 5" :to="calcY + 5" dur="8s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="110" :cy="calcY + calcH/3" r="1.5" fill="white" opacity="0.6">
-          <animate attributeName="cy" :from="calcY + calcH - 10" :to="calcY + 10" dur="6s" repeatCount="indefinite" />
-        </circle>
+        <!-- Mehrere Blasen im Wasser mit unterschiedlichen Bewegungen -->
+        <g opacity="0.7">
+          <circle cx="75" :cy="calcY + calcH/2" r="1.5" fill="white">
+            <animate attributeName="cy" :from="calcY + calcH - 5" :to="calcY + 5" dur="7s" repeatCount="indefinite" />
+            <animate attributeName="cx" values="75;77;75" dur="7s" repeatCount="indefinite" />
+          </circle>
+          
+          <circle cx="95" :cy="calcY + calcH/3" r="1" fill="white">
+            <animate attributeName="cy" :from="calcY + calcH - 10" :to="calcY + 10" dur="9s" repeatCount="indefinite" />
+            <animate attributeName="r" values="1;1.2;1" dur="4s" repeatCount="indefinite" />
+          </circle>
+          
+          <circle cx="115" :cy="calcY + calcH*0.6" r="1.8" fill="white">
+            <animate attributeName="cy" :from="calcY + calcH - 8" :to="calcY + 8" dur="8s" repeatCount="indefinite" />
+            <animate attributeName="cx" values="115;113;115" dur="8s" repeatCount="indefinite" />
+          </circle>
+          
+          <circle cx="85" :cy="calcY + calcH*0.7" r="0.8" fill="white">
+            <animate attributeName="cy" :from="calcY + calcH - 12" :to="calcY + 12" dur="10s" repeatCount="indefinite" />
+          </circle>
+        </g>
       </g>
       
       <!-- Prozent-Text mit besserem Styling -->
