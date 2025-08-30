@@ -4,15 +4,14 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 
 ## 1. Grundlegende Infrastruktur
 
-- [ ] Google Sheet erstellen mit zwei Tabellenblättern:
-  - [ ] **Settings**: Konfiguration für Spendenziel, Projektname und API-Token
+- [ ] NocoDB-Instanz einrichten:
+  - [ ] **Settings**: Tabelle für Konfiguration (Spendenziel, Projektname, API-Token)
   - [ ] **Donations**: Tabelle für Spendendaten (Zeitstempel, Betrag, Kanal, Notiz)
-- [ ] Google Apps Script als REST-API einrichten:
-  - [ ] `doGet()` für Statusabfragen implementieren
-  - [ ] `doPost()` für Spendenerfassung implementieren
-  - [ ] Hilfsfunktionen für Sheet-Zugriff und Datenvalidierung erstellen
-  - [ ] Als Web-App deployen mit "Run as me" und "Anyone" Zugriffsberechtigung
-- [ ] Zeitzoneneinstellungen für Sheet und Script auf "Europe/Berlin" setzen
+- [ ] NocoDB REST-API konfigurieren:
+  - [ ] API-Schlüssel generieren
+  - [ ] Berechtigungen für Lese- und Schreibzugriff einrichten
+  - [ ] CORS-Einstellungen konfigurieren
+- [ ] Zeitzoneneinstellungen auf "Europe/Berlin" setzen
 
 ## 2. Vue.js Frontend-Entwicklung
 
@@ -26,9 +25,10 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 
 ## 3. Service-Layer und API-Integration
 
-- [ ] API-Client für Google Apps Script erstellen:
+- [ ] API-Client für NocoDB erstellen:
   - [ ] `fetchStats()` für Statusabfragen
   - [ ] `postDonation()` für Spendenerfassung
+  - [ ] Repository-Pattern für den Datenzugriff implementieren
 - [ ] Offline-Funktionalität implementieren:
   - [ ] Queue-System für nicht gesendete Spenden
   - [ ] Automatische Synchronisierung bei Wiederverbindung
@@ -43,9 +43,10 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 
 ## 5. Sicherheit und Missbrauchsschutz
 
-- [ ] Shared-Token-Authentifizierung implementieren
-- [ ] CORS-Konfiguration für die Web-App
+- [ ] API-Token-Authentifizierung für NocoDB implementieren
+- [ ] CORS-Konfiguration für die NocoDB-API
 - [ ] Eingabevalidierung auf Client- und Serverseite
+- [ ] Rate-Limiting für API-Anfragen einrichten
 - [ ] Optional: Cloudflare Turnstile für Bot-Schutz integrieren
 
 ## 6. Erweiterungen für "Eingabe von überall"
@@ -55,21 +56,23 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
   - [ ] Web App Manifest erstellen
   - [ ] Install-Prompt für mobile Geräte
 - [ ] QR-Code für einfachen Zugriff generieren
-- [ ] Optional: Google Form als alternativen Eingabekanal einrichten
+- [ ] Optional: Einfaches Web-Formular als alternativen Eingabekanal einrichten
 
 ## 7. Optimierungen
 
 - [ ] Caching-Strategien für API-Anfragen implementieren
-- [ ] LockService für parallele Schreibzugriffe nutzen
+- [ ] Optimistische UI-Updates für bessere Benutzererfahrung
 - [ ] Performance-Optimierungen für die Vue-App
 - [ ] Barrierefreiheit nach WCAG-Standards sicherstellen
+- [ ] Datenbank-Indizes für schnellere Abfragen einrichten
 
 ## 8. Deployment und Betrieb
 
 - [ ] Frontend auf statischem Hosting bereitstellen (Netlify, GitHub Pages, etc.)
+- [ ] NocoDB auf geeignetem Server deployen (Docker, VPS, etc.)
 - [ ] Dokumentation für Administratoren erstellen
 - [ ] Monitoring für API-Nutzung und Fehler einrichten
-- [ ] Backup-Strategie für Spendendaten implementieren
+- [ ] Backup-Strategie für NocoDB-Datenbank implementieren
 
 ## 9. Testing
 
