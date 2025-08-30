@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { NocoDBService } from '../services/nocodb/nocodbService';
-import { Stats } from '../services/models/types';
+import type { Stats } from '../services/models/types';
 import { enqueue, dequeueAll, hasQueue } from '../utils/queue';
 
 /**
