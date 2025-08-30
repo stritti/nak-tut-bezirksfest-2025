@@ -10,7 +10,7 @@ export interface ApiClientConfig {
 }
 
 /**
- * Basis-API-Client für HTTP-Anfragen an die NocoDB-API
+ * Basis-API-Client für HTTP-Anfragen an die NocoDB-API v2
  */
 export class ApiClient {
   private client: AxiosInstance;
@@ -21,7 +21,7 @@ export class ApiClient {
       timeout: config.timeout || 10000,
       headers: {
         'Content-Type': 'application/json',
-        'xc-auth': config.apiKey
+        'xc-token': config.apiKey // NocoDB v2 API verwendet 'xc-token' statt 'xc-auth'
       }
     });
   }
@@ -31,8 +31,9 @@ export class ApiClient {
    */
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response = await this.client.get<T>(url, config);
-      return response.data;
+      const response = await this.client.get<{ list?: T[], data?: T }>(url, config);
+      // NocoDB v2 API gibt Daten in einem 'list' oder 'data' Objekt zurück
+      return (response.data.list || response.data.data || response.data) as T;
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -44,8 +45,9 @@ export class ApiClient {
    */
   async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response = await this.client.post<T>(url, data, config);
-      return response.data;
+      const response = await this.client.post<{ data?: T }>(url, data, config);
+      // NocoDB v2 API gibt Daten in einem 'data' Objekt zurück
+      return (response.data.data || response.data) as T;
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -57,8 +59,9 @@ export class ApiClient {
    */
   async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response = await this.client.put<T>(url, data, config);
-      return response.data;
+      const response = await this.client.put<{ data?: T }>(url, data, config);
+      // NocoDB v2 API gibt Daten in einem 'data' Objekt zurück
+      return (response.data.data || response.data) as T;
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -70,8 +73,9 @@ export class ApiClient {
    */
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response = await this.client.delete<T>(url, config);
-      return response.data;
+      const response = await this.client.delete<{ data?: T }>(url, config);
+      // NocoDB v2 API gibt Daten in einem 'data' Objekt zurück
+      return (response.data.data || response.data) as T;
     } catch (error) {
       this.handleError(error);
       throw error;

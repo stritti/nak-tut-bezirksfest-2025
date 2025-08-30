@@ -2,17 +2,17 @@ import { ApiClient } from '../api/apiClient';
 import type { Settings, Donation, Stats, DonationResponse } from '../models/types';
 
 /**
- * Service für die Kommunikation mit der NocoDB-API
+ * Service für die Kommunikation mit der NocoDB-API v2
  */
 export class NocoDBService {
   private apiClient: ApiClient;
-  private projectId: string;
+  private baseId: string;
   private settingsTable: string;
   private donationsTable: string;
 
-  constructor(apiClient: ApiClient, projectId: string, settingsTable = 'Settings', donationsTable = 'Donations') {
+  constructor(apiClient: ApiClient, baseId: string, settingsTable = 'Settings', donationsTable = 'Donations') {
     this.apiClient = apiClient;
-    this.projectId = projectId;
+    this.baseId = baseId;
     this.settingsTable = settingsTable;
     this.donationsTable = donationsTable;
   }
@@ -21,15 +21,24 @@ export class NocoDBService {
    * Abrufen der Projekteinstellungen
    */
   async getSettings(): Promise<Settings> {
-    const url = `/nc/${this.projectId}/api/v1/${this.settingsTable}/find-one`;
-    return this.apiClient.get<Settings>(url);
+    // In v2 API verwenden wir /api/v2/tables/{tableId}/records
+    const url = `/api/v2/tables/${this.settingsTable}/records`;
+    const settings = await this.apiClient.get<Settings[]>(url);
+    
+    // Wir nehmen den ersten Eintrag aus der Liste
+    if (Array.isArray(settings) && settings.length > 0) {
+      return settings[0];
+    }
+    
+    throw new Error('Keine Einstellungen gefunden');
   }
 
   /**
    * Abrufen aller Spenden
    */
   async getDonations(): Promise<Donation[]> {
-    const url = `/nc/${this.projectId}/api/v1/${this.donationsTable}`;
+    // In v2 API verwenden wir /api/v2/tables/{tableId}/records
+    const url = `/api/v2/tables/${this.donationsTable}/records`;
     return this.apiClient.get<Donation[]>(url);
   }
 
@@ -38,7 +47,8 @@ export class NocoDBService {
    */
   async addDonation(amount: number, channel = 'kiosk', note = ''): Promise<DonationResponse> {
     try {
-      const url = `/nc/${this.projectId}/api/v1/${this.donationsTable}`;
+      // In v2 API verwenden wir /api/v2/tables/{tableId}/records
+      const url = `/api/v2/tables/${this.donationsTable}/records`;
       const timestamp = new Date().toISOString();
 
       const donation = await this.apiClient.post<Donation>(url, {

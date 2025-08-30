@@ -2,32 +2,35 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import ProgressWell from './components/ProgressWell.vue';
 import DonationForm from './components/DonationForm.vue';
+import { ApiClient } from './services/api/apiClient';
+import { NocoDBService } from './services/nocodb/nocodbService';
+import { useDonations } from './composables/useDonations';
+import type { Stats } from './services/models/types';
 
-// Simulierte Daten für die Entwicklung
-const stats = ref({
-  projectName: 'Wasserbrunnen Afrika',
-  goal_eur: 5000,
-  total_eur: 1250,
-  progress: 0.25,
-  last_donation: {
-    timestamp: new Date().toISOString(),
-    amount_eur: 50,
-    channel: 'kiosk',
-    note: ''
-  }
+// NocoDB API-Client und Service initialisieren
+const apiClient = new ApiClient({
+  baseURL: import.meta.env.VITE_NOCODB_API_URL,
+  apiKey: import.meta.env.VITE_NOCODB_API_KEY
 });
 
+const nocodbService = new NocoDBService(
+  apiClient,
+  import.meta.env.VITE_NOCODB_PROJECT_ID
+);
+
+// Zustandsvariablen
+const stats = ref<Stats | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const message = ref<string | null>(null);
 
-// Formatierung von Geldbeträgen
-const formatEUR = (amount: number): string => {
-  return new Intl.NumberFormat('de-DE', { 
-    style: 'currency', 
-    currency: 'EUR' 
-  }).format(amount);
-};
+// Donations Composable verwenden
+const {
+  formatEUR,
+  loadStats,
+  addDonation,
+  syncQueue
+} = useDonations(nocodbService);
 
 // Datum formatieren
 const formatDate = (dateString: string): string => {
@@ -47,24 +50,32 @@ const handleDonate = async (amount: number) => {
   error.value = null;
   
   try {
-    // Hier würde die API-Anfrage erfolgen
-    // Simuliere eine erfolgreiche Spende
-    setTimeout(() => {
-      stats.value.total_eur += amount;
-      stats.value.progress = Math.min(1, stats.value.total_eur / stats.value.goal_eur);
-      stats.value.last_donation = {
-        timestamp: new Date().toISOString(),
-        amount_eur: amount,
-        channel: 'kiosk',
-        note: ''
-      };
-      
+    const response = await addDonation(amount);
+    if (response.success) {
       message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`;
-      loading.value = false;
-    }, 1000);
+      await loadStats(); // Statistik aktualisieren
+    } else {
+      throw new Error(response.error || 'Unbekannter Fehler');
+    }
   } catch (err) {
     console.error('Fehler beim Hinzufügen der Spende:', err);
     error.value = 'Spende konnte nicht gespeichert werden';
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Statistik laden
+const fetchStats = async () => {
+  loading.value = true;
+  error.value = null;
+  
+  try {
+    stats.value = await nocodbService.getStats();
+  } catch (err) {
+    console.error('Fehler beim Laden der Statistik:', err);
+    error.value = 'Statistik konnte nicht geladen werden';
+  } finally {
     loading.value = false;
   }
 };
@@ -72,12 +83,20 @@ const handleDonate = async (amount: number) => {
 // Polling-Intervall für Statistik-Updates
 let statsInterval: number | undefined;
 
-onMounted(() => {
+onMounted(async () => {
+  // Initiale Statistik laden
+  await fetchStats();
+  
+  // Offline-Queue synchronisieren, wenn online
+  if (navigator.onLine) {
+    await syncQueue();
+  }
+  
+  // Event-Listener für Online-Status
+  window.addEventListener('online', syncQueue);
+  
   // Regelmäßiges Update der Statistik (alle 30 Sekunden)
-  // In der realen Implementierung würde hier die API abgefragt werden
-  statsInterval = window.setInterval(() => {
-    // Simuliere API-Abfrage
-  }, 30000);
+  statsInterval = window.setInterval(fetchStats, 30000);
 });
 
 onUnmounted(() => {
@@ -85,38 +104,52 @@ onUnmounted(() => {
   if (statsInterval) {
     clearInterval(statsInterval);
   }
+  
+  // Event-Listener entfernen
+  window.removeEventListener('online', syncQueue);
 });
 </script>
 
 <template>
   <div class="app">
     <header class="header">
-      <h1 class="title">{{ stats.projectName }}</h1>
+      <h1 class="title">{{ stats?.projectName || 'Wasserbrunnen Afrika' }}</h1>
       <p class="subtitle">
         Helfen Sie mit, den Brunnen zu finanzieren!
-        <strong>Ziel: {{ formatEUR(stats.goal_eur) }}</strong>
+        <strong>Ziel: {{ formatEUR(stats?.goal_eur || 5000) }}</strong>
       </p>
     </header>
 
     <main class="main">
-      <ProgressWell
-        :progress="stats.progress"
-        :total="stats.total_eur"
-        :goal="stats.goal_eur"
-        :title="stats.projectName"
-      />
+      <div v-if="loading && !stats" class="loading">
+        <p>Daten werden geladen...</p>
+      </div>
+      
+      <div v-else-if="error && !stats" class="error-message">
+        <p>{{ error }}</p>
+        <button @click="fetchStats" class="retry-button">Erneut versuchen</button>
+      </div>
+      
+      <template v-else-if="stats">
+        <ProgressWell
+          :progress="stats.progress"
+          :total="stats.total_eur"
+          :goal="stats.goal_eur"
+          :title="stats.projectName"
+        />
 
-      <DonationForm
-        :loading="loading"
-        :message="message"
-        :error="error"
-        :formatEUR="formatEUR"
-        @donate="handleDonate"
-      />
+        <DonationForm
+          :loading="loading"
+          :message="message"
+          :error="error"
+          :formatEUR="formatEUR"
+          @donate="handleDonate"
+        />
+      </template>
     </main>
 
     <footer class="footer">
-      <p v-if="stats.last_donation" class="last-donation">
+      <p v-if="stats?.last_donation" class="last-donation">
         Letzte Spende: {{ formatEUR(stats.last_donation.amount_eur) }} 
         ({{ formatDate(stats.last_donation.timestamp) }})
       </p>
@@ -180,6 +213,34 @@ body {
   flex-direction: column;
   gap: 2rem;
   margin-bottom: 2rem;
+  min-height: 400px;
+}
+
+.loading, .error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 0.75rem;
+  text-align: center;
+  min-height: 200px;
+}
+
+.error-message {
+  color: #c62828;
+  background-color: #ffebee;
+}
+
+.retry-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
 }
 
 .footer {
