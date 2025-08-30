@@ -6,7 +6,8 @@ export interface QueueEntry {
   amount: number;
   channel?: string;
   note?: string;
-  projectName?: string;
+  projectName?: string; // Für Abwärtskompatibilität
+  project_name?: string; // Korrekter Feldname für NocoDB
   timestamp: number;
 }
 
@@ -21,7 +22,8 @@ export function enqueue(amount: number, channel = 'kiosk', note = '', projectNam
     amount,
     channel,
     note,
-    projectName,
+    project_name: projectName, // Korrekter Feldname für NocoDB
+    projectName, // Für Abwärtskompatibilität
     timestamp: Date.now()
   });
   saveQueue(queue);

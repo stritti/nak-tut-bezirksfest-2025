@@ -22,7 +22,8 @@ export interface Donation {
   timestamp: string;
   amount_eur: number;
   channel: string;
-  projectName?: string; // Name des Projekts, für das gespendet wurde
+  project_name?: string; // Name des Projekts, für das gespendet wurde
+  projectName?: string; // Alias für project_name (für Kompatibilität)
   created_at?: string;
   updated_at?: string;
 }

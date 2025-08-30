@@ -75,7 +75,9 @@ export function useDonations(nocodbService: NocoDBService) {
     const entries = dequeueAll();
     for (const entry of entries) {
       try {
-        await nocodbService.addDonation(entry.amount, entry.channel, entry.note, entry.projectName);
+        // Verwende project_name, wenn vorhanden, sonst projectName (für Abwärtskompatibilität)
+        const projectName = entry.project_name || entry.projectName;
+        await nocodbService.addDonation(entry.amount, entry.channel, entry.note, projectName);
       } catch (err) {
         // Bei Fehler: Eintrag zurück in die Queue
         enqueue(entry.amount, entry.channel, entry.note, entry.projectName);

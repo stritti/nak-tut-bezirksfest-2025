@@ -57,7 +57,8 @@ export class NocoDBService {
 
       // Füge den Projektnamen hinzu, wenn vorhanden
       if (projectName) {
-        donationData.projectName = projectName
+        // Der Feldname in der NocoDB-Tabelle ist wahrscheinlich "project_name" statt "projectName"
+        donationData.project_name = projectName
       }
 
       const donation = await this.apiClient.post<Donation>(url, donationData)
