@@ -84,14 +84,10 @@
         <!-- Hintergrund für tieferes Wasser -->
         <rect x="62" :y="calcY + 5" width="76" :height="calcH" fill="#0D47A1" opacity="0.2" />
         
-        <!-- Mehrere Wellenschichten für mehr Tiefe -->
-        <rect :y="calcY" x="62" width="76" :height="calcH" fill="url(#wave2)" opacity="0.9" filter="url(#waterBlur)">
-          <animate attributeName="x" from="62" to="32" dur="5s" repeatCount="indefinite" />
-        </rect>
+        <!-- Mehrere Wellenschichten für mehr Tiefe ohne horizontale Bewegung -->
+        <rect :y="calcY" x="62" width="76" :height="calcH" fill="url(#wave2)" opacity="0.9" filter="url(#waterBlur)" />
         
-        <rect :y="calcY - 3" x="62" width="76" :height="calcH" fill="url(#wave1)" opacity="0.8">
-          <animate attributeName="x" from="62" to="22" dur="3s" repeatCount="indefinite" />
-        </rect>
+        <rect :y="calcY - 3" x="62" width="76" :height="calcH" fill="url(#wave1)" opacity="0.8" />
         
         <!-- Wellenoberfläche mit Bewegung -->
         <path :d="`M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`" 
