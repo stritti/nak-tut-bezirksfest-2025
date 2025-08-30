@@ -109,7 +109,8 @@ onUnmounted(() => {
       </p>
     </header>
 
-    <main class="main">
+    <router-view>
+      <main class="main">
       <div v-if="loading && !stats" class="loading">
         <p>Daten werden geladen...</p>
       </div>
@@ -135,7 +136,8 @@ onUnmounted(() => {
           @donate="handleDonate"
         />
       </template>
-    </main>
+      </main>
+    </router-view>
 
     <footer class="footer">
       <p v-if="stats?.last_donation" class="last-donation">
