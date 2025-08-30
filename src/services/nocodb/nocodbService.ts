@@ -41,24 +41,22 @@ export class NocoDBService {
   /**
    * Hinzufügen einer neuen Spende
    */
-  async addDonation(amount: number, channel = 'kiosk', note = '', projectName?: string): Promise<DonationResponse> {
+  async addDonation(
+    amount: number,
+    channel = 'kiosk',
+    projectName?: string,
+  ): Promise<DonationResponse> {
     try {
       // In v2 API verwenden wir /api/v2/tables/{tableId}/records
       const url = `/api/v2/tables/${this.donationsTable}/records`
       const timestamp = new Date().toISOString()
 
       // Bereite die Daten vor
-      const donationData: any = {
+      const donationData: unknown = {
         timestamp,
         amount_eur: amount,
         channel,
-        note,
-      }
-
-      // Füge den Projektnamen hinzu, wenn vorhanden
-      if (projectName) {
-        // Der Feldname in der NocoDB-Tabelle ist wahrscheinlich "project_name" statt "projectName"
-        donationData.project_name = projectName
+        projectName,
       }
 
       const donation = await this.apiClient.post<Donation>(url, donationData)
