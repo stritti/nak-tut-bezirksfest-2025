@@ -148,10 +148,15 @@ onUnmounted(() => {
           formatDate(stats.last_donation.timestamp)
         }})
       </p>
-      <p class="status">
-        <span v-if="loading">Wird geladen...</span>
-        <span v-else>Stand wird alle 30 Sekunden aktualisiert</span>
-      </p>
+      <div class="footer-row">
+        <p class="status">
+          <span v-if="loading">Wird geladen...</span>
+          <span v-else>Stand wird alle 30 Sekunden aktualisiert</span>
+        </p>
+        <router-link to="/beamer" class="beamer-link" target="_blank">
+          Beamer-Ansicht
+        </router-link>
+      </div>
     </footer>
   </div>
 </template>
@@ -253,8 +258,28 @@ body {
   font-style: italic;
 }
 
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .status {
   font-size: 0.8rem;
+}
+
+.beamer-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(27, 115, 232, 0.1);
+  transition: background-color 0.2s;
+}
+
+.beamer-link:hover {
+  background-color: rgba(27, 115, 232, 0.2);
 }
 
 @media (max-width: 600px) {
