@@ -30,3 +30,4 @@ coverage
 *.tsbuildinfo
 .aider*
 .env
+dev-dist/*
