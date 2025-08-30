@@ -124,7 +124,7 @@ onUnmounted(() => {
           :progress="stats.progress"
           :total="stats.total_eur"
           :goal="stats.goal_eur"
-          :title="stats.projectName"
+          :title="stats.projectName || 'Wasserbrunnen Afrika'"
         />
 
         <DonationForm
