@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
 import BeamerView from '../views/BeamerView.vue'
-
-// Define a Home component that just renders the main App content
-const Home = { template: '<div class="home-wrapper"><slot></slot></div>' }
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: HomeView
     },
     {
       path: '/beamer',
