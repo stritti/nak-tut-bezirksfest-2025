@@ -42,13 +42,9 @@ const handleDonate = async (amount: number) => {
   error.value = null
 
   try {
-    const response = await addDonation(amount)
-    if (response.success) {
-      message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`
-      await loadStats() // Statistik aktualisieren
-    } else {
-      throw new Error(response.error || 'Unbekannter Fehler')
-    }
+    await addDonation(amount)
+    message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`
+    await loadStats() // Statistik aktualisieren
   } catch (err) {
     console.error('Fehler beim Hinzufügen der Spende:', err)
     error.value = 'Spende konnte nicht gespeichert werden'
