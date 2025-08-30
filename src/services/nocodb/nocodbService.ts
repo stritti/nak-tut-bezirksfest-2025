@@ -1,20 +1,16 @@
-import { ApiClient } from '../api/apiClient';
-import type { Settings, Donation, Stats, DonationResponse } from '../models/types';
+import { ApiClient } from '../api/apiClient'
+import type { Settings, Donation, Stats, DonationResponse } from '../models/types'
 
 /**
  * Service für die Kommunikation mit der NocoDB-API v2
  */
 export class NocoDBService {
-  private apiClient: ApiClient;
-  private baseId: string;
-  private settingsTable: string;
-  private donationsTable: string;
+  private apiClient: ApiClient
+  private settingsTable = 'mhbhc091n5dfr6y'
+  private donationsTable = 'm3772qunbgq8adt'
 
-  constructor(apiClient: ApiClient, baseId: string, settingsTable = 'Settings', donationsTable = 'Donations') {
-    this.apiClient = apiClient;
-    this.baseId = baseId;
-    this.settingsTable = settingsTable;
-    this.donationsTable = donationsTable;
+  constructor(apiClient: ApiClient) {
+    this.apiClient = apiClient
   }
 
   /**
@@ -22,15 +18,15 @@ export class NocoDBService {
    */
   async getSettings(): Promise<Settings> {
     // In v2 API verwenden wir /api/v2/tables/{tableId}/records
-    const url = `/api/v2/tables/${this.settingsTable}/records`;
-    const settings = await this.apiClient.get<Settings[]>(url);
-    
+    const url = `/api/v2/tables/${this.settingsTable}/records`
+    const settings = await this.apiClient.get<Settings[]>(url)
+
     // Wir nehmen den ersten Eintrag aus der Liste
     if (Array.isArray(settings) && settings.length > 0) {
-      return settings[0];
+      return settings[0]
     }
-    
-    throw new Error('Keine Einstellungen gefunden');
+
+    throw new Error('Keine Einstellungen gefunden')
   }
 
   /**
@@ -38,8 +34,8 @@ export class NocoDBService {
    */
   async getDonations(): Promise<Donation[]> {
     // In v2 API verwenden wir /api/v2/tables/{tableId}/records
-    const url = `/api/v2/tables/${this.donationsTable}/records`;
-    return this.apiClient.get<Donation[]>(url);
+    const url = `/api/v2/tables/${this.donationsTable}/records`
+    return this.apiClient.get<Donation[]>(url)
   }
 
   /**
@@ -48,26 +44,26 @@ export class NocoDBService {
   async addDonation(amount: number, channel = 'kiosk', note = ''): Promise<DonationResponse> {
     try {
       // In v2 API verwenden wir /api/v2/tables/{tableId}/records
-      const url = `/api/v2/tables/${this.donationsTable}/records`;
-      const timestamp = new Date().toISOString();
+      const url = `/api/v2/tables/${this.donationsTable}/records`
+      const timestamp = new Date().toISOString()
 
       const donation = await this.apiClient.post<Donation>(url, {
         timestamp,
         amount_eur: amount,
         channel,
-        note
-      });
+        note,
+      })
 
       return {
         success: true,
-        donation
-      };
+        donation,
+      }
     } catch (error) {
-      console.error('Fehler beim Hinzufügen der Spende:', error);
+      console.error('Fehler beim Hinzufügen der Spende:', error)
       return {
         success: false,
-        error: 'Spende konnte nicht gespeichert werden'
-      };
+        error: 'Spende konnte nicht gespeichert werden',
+      }
     }
   }
 
@@ -77,34 +73,37 @@ export class NocoDBService {
   async getStats(): Promise<Stats> {
     try {
       // Einstellungen abrufen
-      const settings = await this.getSettings();
+      const settings = await this.getSettings()
 
       // Alle Spenden abrufen
-      const donations = await this.getDonations();
+      const donations = await this.getDonations()
 
       // Gesamtbetrag berechnen
-      const total = donations.reduce((sum, donation) => sum + donation.amount_eur, 0);
+      const total = donations.reduce((sum, donation) => sum + donation.amount_eur, 0)
 
       // Fortschritt berechnen (0-1)
-      const progress = settings.goal_eur > 0 ? Math.min(1, total / settings.goal_eur) : 0;
+      const progress = settings.goal_eur > 0 ? Math.min(1, total / settings.goal_eur) : 0
 
       // Letzte Spende ermitteln
-      const lastDonation = donations.length > 0
-        ? donations.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0]
-        : null;
+      const lastDonation =
+        donations.length > 0
+          ? donations.sort(
+              (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+            )[0]
+          : null
 
       return {
         projectName: settings.project_name,
         goal_eur: settings.goal_eur,
         total_eur: Number(total.toFixed(2)),
         progress: Number(progress.toFixed(4)),
-        last_donation: lastDonation
-      };
+        last_donation: lastDonation,
+      }
     } catch (error) {
-      console.error('Fehler beim Abrufen der Statistik:', error);
-      throw new Error('Statistik konnte nicht abgerufen werden');
+      console.error('Fehler beim Abrufen der Statistik:', error)
+      throw new Error('Statistik konnte nicht abgerufen werden')
     }
   }
 }
 
-export default NocoDBService;
+export default NocoDBService
