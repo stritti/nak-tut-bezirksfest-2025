@@ -7,11 +7,11 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 - [x] NocoDB-Instanz einrichten:
   - [x] **Settings**: Tabelle für Konfiguration (Spendenziel, Projektname, API-Token)
   - [x] **Donations**: Tabelle für Spendendaten (Zeitstempel, Betrag, Kanal, Notiz)
-- [ ] NocoDB REST-API konfigurieren:
-  - [ ] API-Schlüssel generieren
-  - [ ] Berechtigungen für Lese- und Schreibzugriff einrichten
+- [x] NocoDB REST-API konfigurieren:
+  - [x] API-Schlüssel generieren
+  - [x] Berechtigungen für Lese- und Schreibzugriff einrichten
   - [ ] CORS-Einstellungen konfigurieren
-- [ ] Zeitzoneneinstellungen auf "Europe/Berlin" setzen
+- [x] Zeitzoneneinstellungen auf "Europe/Berlin" setzen
 
 ## 2. Vue.js Frontend-Entwicklung
 
@@ -68,8 +68,8 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 
 ## 8. Deployment und Betrieb
 
-- [ ] Frontend auf statischem Hosting bereitstellen (Netlify, GitHub Pages, etc.)
-- [ ] NocoDB auf geeignetem Server deployen (Docker, VPS, etc.)
+- [x] Frontend auf statischem Hosting bereitstellen (Netlify, GitHub Pages, etc.)
+- [x] NocoDB auf geeignetem Server deployen (Docker, VPS, etc.)
 - [ ] Dokumentation für Administratoren erstellen
 - [ ] Monitoring für API-Nutzung und Fehler einrichten
 - [ ] Backup-Strategie für NocoDB-Datenbank implementieren
@@ -77,13 +77,13 @@ Diese Aufgabenliste beschreibt die notwendigen Schritte zur Implementierung eine
 ## 9. Testing
 
 - [ ] Unit-Tests für kritische Komponenten schreiben
-- [ ] End-to-End-Tests für den Spendenprozess erstellen
-- [ ] Offline-Funktionalität testen
-- [ ] Cross-Browser- und Geräte-Kompatibilität sicherstellen
+- [x] End-to-End-Tests für den Spendenprozess erstellen
+- [x] Offline-Funktionalität testen
+- [x] Cross-Browser- und Geräte-Kompatibilität sicherstellen
 
 ## 10. Abschluss und Übergabe
 
 - [ ] Benutzerhandbuch für Kiosk-Betreiber erstellen
 - [ ] Schulung für Administratoren durchführen
-- [ ] Feedback einholen und letzte Anpassungen vornehmen
+- [x] Feedback einholen und letzte Anpassungen vornehmen
 - [ ] Projekt übergeben und Support-Prozess definieren
