@@ -49,11 +49,14 @@
       <rect x="40" y="20" width="120" height="20" rx="4" fill="url(#woodGradient)" filter="url(#woodTexture)" />
       <rect x="50" y="40" width="20" height="160" fill="url(#woodGradient)" filter="url(#woodTexture)" />
       <rect x="130" y="40" width="20" height="160" fill="url(#woodGradient)" filter="url(#woodTexture)" />
-      <rect x="60" y="200" width="80" height="40" rx="6" fill="url(#woodGradient)" filter="url(#woodTexture)" filter="url(#shadow)" />
+      <rect x="60" y="200" width="80" height="40" rx="6" fill="url(#woodGradient)" filter="url(#woodTexture)" />
       
       <!-- Dekorative Elemente -->
       <circle cx="60" cy="30" r="3" fill="#5D4037" />
       <circle cx="140" cy="30" r="3" fill="#5D4037" />
+      
+      <!-- Schatten für die Basis -->
+      <rect x="60" y="200" width="80" height="40" rx="6" fill="transparent" filter="url(#shadow)" />
       
       <!-- Wasserfüllung mit Animation -->
       <g clip-path="url(#wellCavity)">
