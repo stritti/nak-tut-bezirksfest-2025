@@ -22,7 +22,7 @@ export interface Donation {
   timestamp: string;
   amount_eur: number;
   channel: string;
-  stats_id?: string; // Verknüpfung mit dem Stats-Datensatz
+  projectName?: string; // Name des Projekts, für das gespendet wurde
   created_at?: string;
   updated_at?: string;
 }

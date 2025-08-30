@@ -41,7 +41,7 @@ export class NocoDBService {
   /**
    * Hinzufügen einer neuen Spende
    */
-  async addDonation(amount: number, channel = 'kiosk', note = '', statsId?: string): Promise<DonationResponse> {
+  async addDonation(amount: number, channel = 'kiosk', note = '', projectName?: string): Promise<DonationResponse> {
     try {
       // In v2 API verwenden wir /api/v2/tables/{tableId}/records
       const url = `/api/v2/tables/${this.donationsTable}/records`
@@ -55,9 +55,9 @@ export class NocoDBService {
         note,
       }
 
-      // Füge die Stats-Referenz hinzu, wenn vorhanden
-      if (statsId) {
-        donationData.stats = statsId
+      // Füge den Projektnamen hinzu, wenn vorhanden
+      if (projectName) {
+        donationData.projectName = projectName
       }
 
       const donation = await this.apiClient.post<Donation>(url, donationData)

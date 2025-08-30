@@ -42,8 +42,8 @@ const handleDonate = async (amount: number) => {
   error.value = null
 
   try {
-    // Stats-ID an die Spende übergeben, falls vorhanden
-    await addDonation(amount, stats.value?.id)
+    // Projektnamen an die Spende übergeben, falls vorhanden
+    await addDonation(amount, stats.value?.projectName)
     message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`
     await loadStats() // Statistik aktualisieren
   } catch (err) {
