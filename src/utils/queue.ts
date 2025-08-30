@@ -6,6 +6,7 @@ export interface QueueEntry {
   amount: number;
   channel?: string;
   note?: string;
+  statsId?: string;
   timestamp: number;
 }
 
@@ -14,12 +15,13 @@ const STORAGE_KEY = 'pendingDonations';
 /**
  * Spende zur Queue hinzufügen
  */
-export function enqueue(amount: number, channel = 'kiosk', note = ''): void {
+export function enqueue(amount: number, channel = 'kiosk', note = '', statsId?: string): void {
   const queue = getQueue();
   queue.push({
     amount,
     channel,
     note,
+    statsId,
     timestamp: Date.now()
   });
   saveQueue(queue);

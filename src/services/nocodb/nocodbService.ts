@@ -41,18 +41,26 @@ export class NocoDBService {
   /**
    * Hinzufügen einer neuen Spende
    */
-  async addDonation(amount: number, channel = 'kiosk', note = ''): Promise<DonationResponse> {
+  async addDonation(amount: number, channel = 'kiosk', note = '', statsId?: string): Promise<DonationResponse> {
     try {
       // In v2 API verwenden wir /api/v2/tables/{tableId}/records
       const url = `/api/v2/tables/${this.donationsTable}/records`
       const timestamp = new Date().toISOString()
 
-      const donation = await this.apiClient.post<Donation>(url, {
+      // Bereite die Daten vor
+      const donationData: any = {
         timestamp,
         amount_eur: amount,
         channel,
         note,
-      })
+      }
+
+      // Füge die Stats-Referenz hinzu, wenn vorhanden
+      if (statsId) {
+        donationData.stats = statsId
+      }
+
+      const donation = await this.apiClient.post<Donation>(url, donationData)
 
       return {
         success: true,
@@ -92,13 +100,17 @@ export class NocoDBService {
             )[0]
           : null
 
-      return {
+      // Stats-Objekt mit ID erstellen
+      const statsObj: Stats = {
+        id: settings.id, // ID aus den Einstellungen verwenden
         projectName: settings.project_name,
         goal_eur: settings.goal_eur,
         total_eur: Number(total.toFixed(2)),
         progress: Number(progress.toFixed(4)),
         last_donation: lastDonation,
       }
+
+      return statsObj
     } catch (error) {
       console.error('Fehler beim Abrufen der Statistik:', error)
       throw new Error('Statistik konnte nicht abgerufen werden')
