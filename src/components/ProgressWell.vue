@@ -137,13 +137,16 @@
         </g>
       </g>
       
-      <!-- Prozent-Text mit besserem Styling -->
+      <!-- Prozent-Text mit besserem Styling und Anzeige des fehlenden Betrags -->
       <g>
         <text x="100" y="140" text-anchor="middle" font-size="20" fill="white" style="font-weight:700; text-shadow: 0 0 4px rgba(0,0,0,0.7);">
           {{ percent }}%
         </text>
         <text x="100" y="160" text-anchor="middle" font-size="12" fill="white" style="font-weight:500; text-shadow: 0 0 3px rgba(0,0,0,0.7);">
           erreicht
+        </text>
+        <text x="100" y="180" text-anchor="middle" font-size="12" fill="white" style="font-weight:500; text-shadow: 0 0 3px rgba(0,0,0,0.7);">
+          Noch {{ remainingText }}
         </text>
       </g>
     </svg>
@@ -183,6 +186,9 @@ const totalText = computed(() => formatEUR(props.total));
 const goalText = computed(() => formatEUR(props.goal));
 // Ensure the percentage is correctly calculated and capped at 100%
 const percent = computed(() => Math.min(100, Math.round(props.progress * 100)));
+// Berechnung des noch fehlenden Betrags
+const remaining = computed(() => Math.max(0, props.goal - props.total));
+const remainingText = computed(() => formatEUR(remaining.value));
 </script>
 
 <style scoped>
