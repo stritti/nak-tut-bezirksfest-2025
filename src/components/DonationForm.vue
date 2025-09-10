@@ -92,6 +92,7 @@ interface Props {
 
 interface Emits {
   (e: 'donate', amount: number, paymentMethod: 'bar' | 'paypal'): void;
+  (e: 'modalClosed'): void;
 }
 
 const props = defineProps<Props>();
@@ -132,6 +133,7 @@ const handleCustomSubmit = () => {
 // Modal schließen
 const closeModal = () => {
   showModal.value = false;
+  emit('modalClosed');
 };
 
 // Betrag parsen (unterstützt deutsches Format)
