@@ -36,11 +36,12 @@
           inputmode="decimal" 
           placeholder="z.B. 12,50"
           class="amount-input"
+          :disabled="customInputDisabled || props.loading"
         />
         <button 
           class="submit-button" 
           @click="handleCustomSubmit"
-          :disabled="loading"
+          :disabled="customInputDisabled || props.loading"
         >
           Spenden
         </button>
@@ -91,11 +92,17 @@ const presets = [2, 5, 10, 20, 50];
 const customAmount = ref('');
 const paymentMethod = ref<'bar' | 'paypal'>('bar');
 const showPaymentInstructions = ref(false);
+const customInputDisabled = ref(false);
 
 // Voreingestellten Betrag spenden
 const handlePresetClick = (amount: number) => {
   emit('donate', amount, paymentMethod.value);
   showPaymentInstructions.value = true;
+  // Deaktiviere das Textfeld und den Senden-Button für 3 Sekunden
+  customInputDisabled.value = true;
+  setTimeout(() => {
+    customInputDisabled.value = false;
+  }, 3000);
 };
 
 // Eigenen Betrag spenden
@@ -214,6 +221,12 @@ const parseAmount = (input: string): number => {
   font-size: 1.1rem;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
+}
+
+.amount-input:disabled {
+  background-color: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
 }
 
 .submit-button {
