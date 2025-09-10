@@ -1,6 +1,7 @@
 <template>
   <div class="donation-form">
     <h2 class="title">Spenden Sie für den Wasserbrunnen</h2>
+    <p class="disclaimer">Diese Spendenaktion ist unabhängig vom Sonderopfer 2025.</p>
 
     <div class="payment-method">
       <label class="method-label">Zahlungsmethode:</label>
@@ -205,9 +206,17 @@ const parseAmount = (input: string): number => {
 .title {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   text-align: center;
   color: #333;
+}
+
+.disclaimer {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+  color: #666;
+  font-size: 0.9rem;
 }
 
 .preset-grid {
