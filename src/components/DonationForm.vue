@@ -2,6 +2,20 @@
   <div class="donation-form">
     <h2 class="title">Spenden Sie für den Wasserbrunnen</h2>
     
+    <div class="payment-method">
+      <label class="method-label">Zahlungsmethode:</label>
+      <div class="method-options">
+        <label class="method-option">
+          <input type="radio" v-model="paymentMethod" value="bar" name="payment-method">
+          <span>Bar</span>
+        </label>
+        <label class="method-option">
+          <input type="radio" v-model="paymentMethod" value="paypal" name="payment-method">
+          <span>PayPal</span>
+        </label>
+      </div>
+    </div>
+    
     <div class="preset-grid">
       <button 
         v-for="amount in presets" 
@@ -35,6 +49,18 @@
     
     <div v-if="message" class="message success">
       {{ message }}
+      <div v-if="showPaymentInstructions" class="payment-instructions">
+        <template v-if="paymentMethod === 'bar'">
+          <p>Bitte werfen Sie Ihre Barspende in den Opferkasten am Ausgang.</p>
+        </template>
+        <template v-else-if="paymentMethod === 'paypal'">
+          <p>Bitte scannen Sie den QR-Code, um zum PayPal Moneypool zu gelangen:</p>
+          <div class="qr-code-placeholder">
+            <!-- Hier könnte ein echter QR-Code eingefügt werden -->
+            <div class="qr-code">QR-Code zum PayPal Moneypool</div>
+          </div>
+        </template>
+      </div>
     </div>
     
     <div v-if="error" class="message error">
@@ -44,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 interface Props {
   loading: boolean;
@@ -54,7 +80,7 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'donate', amount: number): void;
+  (e: 'donate', amount: number, paymentMethod: 'bar' | 'paypal'): void;
 }
 
 const props = defineProps<Props>();
@@ -63,10 +89,13 @@ const emit = defineEmits<Emits>();
 // Voreingestellte Beträge
 const presets = [2, 5, 10, 20, 50];
 const customAmount = ref('');
+const paymentMethod = ref<'bar' | 'paypal'>('bar');
+const showPaymentInstructions = ref(false);
 
 // Voreingestellten Betrag spenden
 const handlePresetClick = (amount: number) => {
-  emit('donate', amount);
+  emit('donate', amount, paymentMethod.value);
+  showPaymentInstructions.value = true;
 };
 
 // Eigenen Betrag spenden
@@ -78,8 +107,9 @@ const handleCustomSubmit = () => {
     return;
   }
   
-  emit('donate', amount);
+  emit('donate', amount, paymentMethod.value);
   customAmount.value = ''; // Eingabefeld zurücksetzen
+  showPaymentInstructions.value = true;
 };
 
 // Betrag parsen (unterstützt deutsches Format)
@@ -97,6 +127,32 @@ const parseAmount = (input: string): number => {
   background-color: #f9f9f9;
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.payment-method {
+  margin-bottom: 1.5rem;
+}
+
+.method-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.method-options {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.method-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.method-option input {
+  cursor: pointer;
 }
 
 .title {
@@ -182,6 +238,33 @@ const parseAmount = (input: string): number => {
 .success {
   background-color: #e6f7e6;
   color: #2e7d32;
+}
+
+.payment-instructions {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f0f7ff;
+  border-radius: 0.5rem;
+  border: 1px solid #d0e0ff;
+}
+
+.qr-code-placeholder {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.qr-code {
+  width: 150px;
+  height: 150px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.8rem;
 }
 
 .error {

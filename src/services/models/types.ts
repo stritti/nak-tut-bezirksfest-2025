@@ -21,6 +21,7 @@ export interface Donation {
   timestamp: string
   amount_eur: number
   channel: string
+  payment_method?: 'bar' | 'paypal'  // Neue Eigenschaft für die Zahlungsmethode
   projectName?: string
   created_at?: string
   updated_at?: string

@@ -45,6 +45,7 @@ export class NocoDBService {
     amount: number,
     channel = 'kiosk',
     projectName?: string,
+    paymentMethod?: 'bar' | 'paypal',
   ): Promise<DonationResponse> {
     try {
       // In v2 API verwenden wir /api/v2/tables/{tableId}/records
@@ -57,6 +58,7 @@ export class NocoDBService {
         amount_eur: amount,
         channel,
         projectName,
+        payment_method: paymentMethod,
       }
 
       console.log('Sende Donation-Daten:', donationData);
