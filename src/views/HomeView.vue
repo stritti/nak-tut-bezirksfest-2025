@@ -36,17 +36,17 @@ const formatDate = (dateString: string): string => {
 }
 
 // Spende verarbeiten
-const handleDonate = async (amount: number) => {
+const handleDonate = async (amount: number, paymentMethod: 'bar' | 'paypal') => {
   loading.value = true
   message.value = null
   error.value = null
 
   try {
-    console.log('Verarbeite Spende von:', amount)
+    console.log('Verarbeite Spende von:', amount, 'Zahlungsmethode:', paymentMethod)
     console.log('Stats-Objekt:', stats.value)
     console.log('Aktuelles Projekt:', stats.value?.projectName)
-    // Projektnamen an die Spende übergeben, falls vorhanden
-    await addDonation(amount, stats.value?.projectName)
+    // Projektnamen und Zahlungsmethode an die Spende übergeben
+    await nocodbService.addDonation(amount, 'kiosk', stats.value?.projectName, paymentMethod)
     message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`
     await loadStats() // Statistik aktualisieren
   } catch (err) {
@@ -127,6 +127,7 @@ onUnmounted(() => {
         :error="error"
         :formatEUR="formatEUR"
         @donate="handleDonate"
+        @modalClosed="fetchStats"
       />
     </template>
     

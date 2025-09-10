@@ -42,13 +42,13 @@ export function useDonations(nocodbService: NocoDBService) {
   }
 
   // Spende hinzufügen
-  const addDonation = async (amount: number, projectName?: string) => {
+  const addDonation = async (amount: number, projectName?: string, paymentMethod?: 'bar' | 'paypal') => {
     loading.value = true
     message.value = null
     error.value = null
 
     try {
-      const response = await nocodbService.addDonation(amount, 'kiosk', projectName)
+      const response = await nocodbService.addDonation(amount, 'kiosk', projectName, paymentMethod)
 
       if (response.success) {
         message.value = `Vielen Dank für Ihre Spende von ${formatEUR(amount)}!`
