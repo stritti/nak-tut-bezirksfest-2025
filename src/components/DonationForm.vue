@@ -147,12 +147,20 @@ const parseAmount = (input: string): number => {
 .method-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   cursor: pointer;
+  padding: 0.5rem 0;
 }
 
-.method-option input {
+.method-option input[type="radio"] {
   cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  accent-color: #1b73e8;
+}
+
+.method-option span {
+  font-size: 1.1rem;
 }
 
 .title {
