@@ -97,7 +97,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 // Voreingestellte Beträge
-const presets = [2, 5, 10, 20, 50];
+const presets = [5, 10, 20, 50];
 const customAmount = ref('');
 const paymentMethod = ref<'bar' | 'paypal'>('bar');
 const showModal = ref(false);
@@ -162,26 +162,44 @@ const parseAmount = (input: string): number => {
 
 .method-options {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
+  justify-content: center;
+  margin: 1rem 0;
 }
 
 .method-option {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   cursor: pointer;
-  padding: 0.5rem 0;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 0.75rem;
+  width: 40%;
+  transition: all 0.2s ease;
+}
+
+.method-option:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
 }
 
 .method-option input[type="radio"] {
   cursor: pointer;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   accent-color: #1b73e8;
 }
 
 .method-option span {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.method-option:has(input:checked) {
+  border-color: #1b73e8;
+  background-color: #f0f7ff;
 }
 
 .title {
