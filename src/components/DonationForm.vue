@@ -1,7 +1,7 @@
 <template>
   <div class="donation-form">
     <h2 class="title">Spenden Sie für den Wasserbrunnen</h2>
-    
+
     <div class="payment-method">
       <label class="method-label">Zahlungsmethode:</label>
       <div class="method-options">
@@ -21,46 +21,46 @@
       <div class="modal-content" @click.stop>
         <button class="modal-close" @click="closeModal">&times;</button>
         <h3>Vielen Dank für Ihre Spende!</h3>
-        
+
         <div v-if="paymentMethod === 'bar'" class="modal-body">
-          <p>Bitte werfen Sie Ihre Barspende in den Opferkasten am Ausgang.</p>
+          <p>Bitte werfen Sie Ihre Barspende in den Opferkasten am Stand.</p>
         </div>
-        
+
         <div v-else-if="paymentMethod === 'paypal'" class="modal-body">
           <p>Bitte scannen Sie den QR-Code, um zum PayPal Moneypool zu gelangen:</p>
           <div class="qr-code-container">
             <div class="qr-code">QR-Code zum PayPal Moneypool</div>
           </div>
         </div>
-        
+
         <button class="modal-button" @click="closeModal">Schließen</button>
       </div>
     </div>
-    
+
     <div class="preset-grid">
-      <button 
-        v-for="amount in presets" 
-        :key="amount" 
+      <button
+        v-for="amount in presets"
+        :key="amount"
         class="preset-button"
         @click="handlePresetClick(amount)"
       >
         {{ formatEUR(amount) }}
       </button>
     </div>
-    
+
     <div class="custom-amount">
       <label for="custom-amount">Eigener Betrag (€):</label>
       <div class="input-group">
-        <input 
+        <input
           id="custom-amount"
-          v-model="customAmount" 
-          inputmode="decimal" 
+          v-model="customAmount"
+          inputmode="decimal"
           placeholder="z.B. 12,50"
           class="amount-input"
           :disabled="customInputDisabled || props.loading"
         />
-        <button 
-          class="submit-button" 
+        <button
+          class="submit-button"
           @click="handleCustomSubmit"
           :disabled="customInputDisabled || props.loading"
         >
@@ -68,11 +68,11 @@
         </button>
       </div>
     </div>
-    
+
     <div v-if="message" class="message success">
       {{ message }}
     </div>
-    
+
     <div v-if="error" class="message error">
       {{ error }}
     </div>
@@ -117,12 +117,12 @@ const handlePresetClick = (amount: number) => {
 // Eigenen Betrag spenden
 const handleCustomSubmit = () => {
   const amount = parseAmount(customAmount.value);
-  
+
   if (isNaN(amount) || amount <= 0) {
     // Fehlerbehandlung könnte hier verbessert werden
     return;
   }
-  
+
   emit('donate', amount, paymentMethod.value);
   customAmount.value = ''; // Eingabefeld zurücksetzen
   showModal.value = true;
@@ -378,7 +378,7 @@ const parseAmount = (input: string): number => {
   .input-group {
     flex-direction: column;
   }
-  
+
   .submit-button {
     width: 100%;
   }
