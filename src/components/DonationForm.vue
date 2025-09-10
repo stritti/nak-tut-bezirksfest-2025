@@ -15,6 +15,27 @@
         </label>
       </div>
     </div>
+
+    <!-- Modal für Zahlungshinweise -->
+    <div v-if="showModal" class="modal-overlay" @click="closeModal">
+      <div class="modal-content" @click.stop>
+        <button class="modal-close" @click="closeModal">&times;</button>
+        <h3>Vielen Dank für Ihre Spende!</h3>
+        
+        <div v-if="paymentMethod === 'bar'" class="modal-body">
+          <p>Bitte werfen Sie Ihre Barspende in den Opferkasten am Ausgang.</p>
+        </div>
+        
+        <div v-else-if="paymentMethod === 'paypal'" class="modal-body">
+          <p>Bitte scannen Sie den QR-Code, um zum PayPal Moneypool zu gelangen:</p>
+          <div class="qr-code-container">
+            <div class="qr-code">QR-Code zum PayPal Moneypool</div>
+          </div>
+        </div>
+        
+        <button class="modal-button" @click="closeModal">Schließen</button>
+      </div>
+    </div>
     
     <div class="preset-grid">
       <button 
@@ -50,18 +71,6 @@
     
     <div v-if="message" class="message success">
       {{ message }}
-      <div v-if="showPaymentInstructions" class="payment-instructions">
-        <template v-if="paymentMethod === 'bar'">
-          <p>Bitte werfen Sie Ihre Barspende in den Opferkasten am Ausgang.</p>
-        </template>
-        <template v-else-if="paymentMethod === 'paypal'">
-          <p>Bitte scannen Sie den QR-Code, um zum PayPal Moneypool zu gelangen:</p>
-          <div class="qr-code-placeholder">
-            <!-- Hier könnte ein echter QR-Code eingefügt werden -->
-            <div class="qr-code">QR-Code zum PayPal Moneypool</div>
-          </div>
-        </template>
-      </div>
     </div>
     
     <div v-if="error" class="message error">
@@ -91,13 +100,13 @@ const emit = defineEmits<Emits>();
 const presets = [2, 5, 10, 20, 50];
 const customAmount = ref('');
 const paymentMethod = ref<'bar' | 'paypal'>('bar');
-const showPaymentInstructions = ref(false);
+const showModal = ref(false);
 const customInputDisabled = ref(false);
 
 // Voreingestellten Betrag spenden
 const handlePresetClick = (amount: number) => {
   emit('donate', amount, paymentMethod.value);
-  showPaymentInstructions.value = true;
+  showModal.value = true;
   // Deaktiviere das Textfeld und den Senden-Button für 3 Sekunden
   customInputDisabled.value = true;
   setTimeout(() => {
@@ -116,7 +125,12 @@ const handleCustomSubmit = () => {
   
   emit('donate', amount, paymentMethod.value);
   customAmount.value = ''; // Eingabefeld zurücksetzen
-  showPaymentInstructions.value = true;
+  showModal.value = true;
+};
+
+// Modal schließen
+const closeModal = () => {
+  showModal.value = false;
 };
 
 // Betrag parsen (unterstützt deutsches Format)
@@ -261,23 +275,55 @@ const parseAmount = (input: string): number => {
   color: #2e7d32;
 }
 
-.payment-instructions {
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #f0f7ff;
-  border-radius: 0.5rem;
-  border: 1px solid #d0e0ff;
-}
-
-.qr-code-placeholder {
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-body {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
 }
 
 .qr-code {
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
   background-color: #fff;
   border: 1px solid #ddd;
   display: flex;
@@ -285,7 +331,24 @@ const parseAmount = (input: string): number => {
   justify-content: center;
   text-align: center;
   padding: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.modal-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #1b73e8;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.modal-button:hover {
+  background-color: #1555b7;
 }
 
 .error {
