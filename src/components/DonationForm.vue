@@ -231,16 +231,19 @@ const parseAmount = (input: string): number => {
 .preset-button {
   padding: 0.75rem;
   font-size: 1.25rem;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: #1b73e8;
+  color: white;
+  border: none;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .preset-button:hover {
-  background-color: #f0f0f0;
+  background-color: #1555b7;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .custom-amount {
