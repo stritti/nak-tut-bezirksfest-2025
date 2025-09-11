@@ -200,6 +200,12 @@ const remainingText = computed(() => formatEUR(remaining.value));
   max-width: 360px;
   margin: 0 auto;
   transition: all 0.3s ease;
+  background-color: #f5f5f5;
+  background-image: linear-gradient(to bottom, #e8e8e8, #f5f5f5);
+  padding: 2rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
 }
 
 .well:hover svg {
