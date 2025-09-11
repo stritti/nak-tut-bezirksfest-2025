@@ -1,9 +1,9 @@
 <template>
-  <div 
-    class="well" 
-    role="progressbar" 
-    :aria-valuenow="percent" 
-    aria-valuemin="0" 
+  <div
+    class="well"
+    role="progressbar"
+    :aria-valuenow="percent"
+    aria-valuemin="0"
     aria-valuemax="100"
   >
     <svg viewBox="0 0 200 260" class="w-full h-auto">
@@ -14,129 +14,129 @@
           <stop offset="50%" style="stop-color:#8B4513;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#6D4C41;stop-opacity:1" />
         </linearGradient>
-        
+
         <filter id="woodTexture" x="0" y="0" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" result="noise" />
           <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
         </filter>
-        
+
         <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.3" />
         </filter>
-        
+
         <clipPath id="wellCavity">
           <rect x="62" y="80" width="76" height="118" rx="6" />
         </clipPath>
-        
+
         <linearGradient id="waterGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:#90CAF9;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#1976D2;stop-opacity:1" />
         </linearGradient>
-        
+
         <linearGradient id="waterGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:#64B5F6;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#1565C0;stop-opacity:1" />
         </linearGradient>
-        
+
         <filter id="waterBlur" x="0" y="0" width="100%" height="100%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
         </filter>
-        
+
         <!-- Mehrere Wellenmuster für komplexere Animation -->
         <pattern id="wave1" x="0" y="0" width="40" height="10" patternUnits="userSpaceOnUse">
           <path d="M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z" fill="url(#waterGradient1)">
-            <animate attributeName="d" 
+            <animate attributeName="d"
                      values="M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z;
                              M0 5 Q5 10 10 5 T20 5 T30 5 T40 5 V10 H0 Z;
-                             M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z" 
-                     dur="3s" 
+                             M0 5 Q5 0 10 5 T20 5 T30 5 T40 5 V10 H0 Z"
+                     dur="3s"
                      repeatCount="indefinite" />
           </path>
         </pattern>
-        
+
         <pattern id="wave2" x="0" y="0" width="60" height="15" patternUnits="userSpaceOnUse">
           <path d="M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z" fill="url(#waterGradient2)" opacity="0.7">
-            <animate attributeName="d" 
+            <animate attributeName="d"
                      values="M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z;
                              M0 7.5 Q7.5 15 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z;
-                             M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z" 
-                     dur="4s" 
+                             M0 7.5 Q7.5 0 15 7.5 T30 7.5 T45 7.5 T60 7.5 V15 H0 Z"
+                     dur="4s"
                      repeatCount="indefinite" />
           </path>
         </pattern>
       </defs>
-      
+
       <!-- Brunnen-Basis mit Holztextur -->
       <rect x="40" y="20" width="120" height="20" rx="4" fill="url(#woodGradient)" filter="url(#woodTexture)" />
       <rect x="50" y="40" width="20" height="160" fill="url(#woodGradient)" filter="url(#woodTexture)" />
       <rect x="130" y="40" width="20" height="160" fill="url(#woodGradient)" filter="url(#woodTexture)" />
       <rect x="60" y="200" width="80" height="40" rx="6" fill="url(#woodGradient)" filter="url(#woodTexture)" />
-      
+
       <!-- Dekorative Elemente -->
       <circle cx="60" cy="30" r="3" fill="#5D4037" />
       <circle cx="140" cy="30" r="3" fill="#5D4037" />
-      
+
       <!-- Schatten für die Basis -->
       <rect x="60" y="200" width="80" height="40" rx="6" fill="transparent" filter="url(#shadow)" />
-      
+
       <!-- Wasserfüllung mit verbesserter Animation -->
       <g clip-path="url(#wellCavity)">
         <!-- Hintergrund für tieferes Wasser -->
         <rect x="62" :y="calcY + 5" width="76" :height="calcH" fill="#0D47A1" opacity="0.2" />
-        
+
         <!-- Mehrere Wellenschichten für mehr Tiefe ohne horizontale Bewegung -->
         <rect :y="calcY" x="62" width="76" :height="calcH" fill="url(#wave2)" opacity="0.9" filter="url(#waterBlur)" />
-        
+
         <rect :y="calcY - 3" x="62" width="76" :height="calcH" fill="url(#wave1)" opacity="0.8" />
-        
+
         <!-- Wellenoberfläche mit Bewegung -->
-        <path :d="`M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`" 
+        <path :d="`M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`"
               fill="#64B5F6" opacity="0.3" filter="url(#waterBlur)">
-          <animate attributeName="d" 
+          <animate attributeName="d"
                    :values="`M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z;
                              M62 ${calcY} Q75 ${calcY + 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z;
-                             M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`" 
-                   dur="2s" 
+                             M62 ${calcY} Q75 ${calcY - 3} 88 ${calcY} T114 ${calcY} T138 ${calcY} V${calcY + calcH} H62 Z`"
+                   dur="2s"
                    repeatCount="indefinite" />
         </path>
-        
+
         <!-- Verbesserte Glanzeffekte auf dem Wasser -->
-        <ellipse 
-          cx="100" 
-          :cy="calcY + 15" 
-          rx="30" 
-          ry="4" 
-          fill="white" 
+        <ellipse
+          cx="100"
+          :cy="calcY + 15"
+          rx="30"
+          ry="4"
+          fill="white"
           opacity="0.25"
           filter="url(#waterBlur)"
           v-if="calcH > 20">
           <animate attributeName="opacity" values="0.25;0.4;0.25" dur="3s" repeatCount="indefinite" />
           <animate attributeName="rx" values="30;32;30" dur="5s" repeatCount="indefinite" />
         </ellipse>
-        
+
         <!-- Mehrere Blasen im Wasser mit unterschiedlichen Bewegungen -->
         <g opacity="0.7">
           <circle cx="75" :cy="calcY + calcH/2" r="1.5" fill="white">
             <animate attributeName="cy" :from="calcY + calcH - 5" :to="calcY + 5" dur="7s" repeatCount="indefinite" />
             <animate attributeName="cx" values="75;77;75" dur="7s" repeatCount="indefinite" />
           </circle>
-          
+
           <circle cx="95" :cy="calcY + calcH/3" r="1" fill="white">
             <animate attributeName="cy" :from="calcY + calcH - 10" :to="calcY + 10" dur="9s" repeatCount="indefinite" />
             <animate attributeName="r" values="1;1.2;1" dur="4s" repeatCount="indefinite" />
           </circle>
-          
+
           <circle cx="115" :cy="calcY + calcH*0.6" r="1.8" fill="white">
             <animate attributeName="cy" :from="calcY + calcH - 8" :to="calcY + 8" dur="8s" repeatCount="indefinite" />
             <animate attributeName="cx" values="115;113;115" dur="8s" repeatCount="indefinite" />
           </circle>
-          
+
           <circle cx="85" :cy="calcY + calcH*0.7" r="0.8" fill="white">
             <animate attributeName="cy" :from="calcY + calcH - 12" :to="calcY + 12" dur="10s" repeatCount="indefinite" />
           </circle>
         </g>
       </g>
-      
+
       <!-- Prozent-Text mit besserem Styling und Anzeige des fehlenden Betrags -->
       <g>
         <text x="100" y="140" text-anchor="middle" font-size="20" fill="white" style="font-weight:700; text-shadow: 0 0 4px rgba(0,0,0,0.7);">
@@ -150,7 +150,7 @@
         </text>
       </g>
     </svg>
-    
+
     <div class="legend">
       <div class="title">{{ title }}</div>
       <div class="amounts">{{ totalText }} / {{ goalText }}</div>
@@ -176,9 +176,9 @@ const calcY = computed(() => 198 - calcH.value); // 80 + 118 - h
 
 // Formatierung der Beträge
 const formatEUR = (amount: number): string => {
-  return new Intl.NumberFormat('de-DE', { 
-    style: 'currency', 
-    currency: 'EUR' 
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR'
   }).format(amount);
 };
 
@@ -200,8 +200,8 @@ const remainingText = computed(() => formatEUR(remaining.value));
   max-width: 360px;
   margin: 0 auto;
   transition: all 0.3s ease;
-  background-color: #f5f5f5;
-  background-image: linear-gradient(to bottom, #e8e8e8, #f5f5f5);
+  background-color: #3e3d3d;
+  background-image: linear-gradient(to bottom, #bcd4fb, #917b02);
   padding: 2rem 1.5rem;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -243,7 +243,7 @@ svg {
   .well {
     max-width: 300px;
   }
-  
+
   .legend {
     font-size: 1rem;
     padding: 0.5rem 1rem;
