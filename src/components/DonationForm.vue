@@ -70,18 +70,27 @@
       </div>
     </div>
 
-    <div v-if="message" class="message success">
-      {{ message }}
-    </div>
-
+    <!-- Nur Fehlermeldungen anzeigen, keine Erfolgsmeldungen mehr -->
     <div v-if="error" class="message error">
       {{ error }}
+    </div>
+
+    <!-- Erfolgs-Modal, das nach 10 Sekunden automatisch verschwindet -->
+    <div v-if="showSuccessModal" class="modal-overlay" @click="closeSuccessModal">
+      <div class="modal-content success-modal" @click.stop>
+        <button class="modal-close" @click="closeSuccessModal">&times;</button>
+        <h3>Vielen Dank für Ihre Spende!</h3>
+        <div class="modal-body">
+          <p>{{ message }}</p>
+        </div>
+        <button class="modal-button" @click="closeSuccessModal">Schließen</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 interface Props {
   loading: boolean;
@@ -103,7 +112,9 @@ const presets = [5, 10, 20, 50];
 const customAmount = ref('');
 const paymentMethod = ref<'bar' | 'paypal'>('bar');
 const showModal = ref(false);
+const showSuccessModal = ref(false);
 const customInputDisabled = ref(false);
+const successModalTimer = ref<number | null>(null);
 
 // Voreingestellten Betrag spenden
 const handlePresetClick = (amount: number) => {
@@ -136,11 +147,37 @@ const closeModal = () => {
   emit('modalClosed');
 };
 
+// Erfolgs-Modal schließen
+const closeSuccessModal = () => {
+  showSuccessModal.value = false;
+  if (successModalTimer.value !== null) {
+    clearTimeout(successModalTimer.value);
+    successModalTimer.value = null;
+  }
+};
+
 // Betrag parsen (unterstützt deutsches Format)
 const parseAmount = (input: string): number => {
   const normalized = input.replace(/\./g, '').replace(',', '.').trim();
   return Number(normalized);
 };
+
+// Beobachte die message-Prop und zeige das Erfolgs-Modal an, wenn eine Nachricht vorhanden ist
+watch(() => props.message, (newMessage) => {
+  if (newMessage) {
+    showSuccessModal.value = true;
+    
+    // Starte einen Timer, um das Modal nach 10 Sekunden automatisch zu schließen
+    if (successModalTimer.value !== null) {
+      clearTimeout(successModalTimer.value);
+    }
+    
+    successModalTimer.value = window.setTimeout(() => {
+      showSuccessModal.value = false;
+      successModalTimer.value = null;
+    }, 10000); // 10 Sekunden
+  }
+});
 </script>
 
 <style scoped>
@@ -302,9 +339,8 @@ const parseAmount = (input: string): number => {
   text-align: center;
 }
 
-.success {
-  background-color: #e6f7e6;
-  color: #2e7d32;
+.success-modal {
+  border-left: 5px solid #2e7d32;
 }
 
 /* Modal Styles */
