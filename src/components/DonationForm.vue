@@ -70,9 +70,6 @@
       </div>
     </div>
 
-    <div v-if="message" class="message success">
-      {{ message }}
-    </div>
 
     <div v-if="error" class="message error">
       {{ error }}
@@ -81,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 interface Props {
   loading: boolean;
