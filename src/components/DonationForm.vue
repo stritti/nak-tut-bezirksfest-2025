@@ -30,7 +30,7 @@
         <div v-else-if="paymentMethod === 'paypal'" class="modal-body">
           <p>Bitte scannen Sie den QR-Code, um zum PayPal Moneypool zu gelangen:</p>
           <div class="qr-code-container">
-            <div class="qr-code">QR-Code zum PayPal Moneypool</div>
+            <PayPalQRCode />
           </div>
         </div>
 
@@ -79,6 +79,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import PayPalQRCode from './PayPalQRCode.vue';
 
 interface Props {
   loading: boolean;

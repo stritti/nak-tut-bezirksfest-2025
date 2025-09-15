@@ -1,6 +1,9 @@
 import { ApiClient } from '../api/apiClient'
 import type { Settings, Donation, Stats, DonationResponse } from '../models/types'
 
+// Singleton-Instanz für den NocoDBService
+let instance: NocoDBService | null = null
+
 /**
  * Service für die Kommunikation mit der NocoDB-API v2
  */
@@ -9,8 +12,20 @@ export class NocoDBService {
   private settingsTable = 'mhbhc091n5dfr6y'
   private donationsTable = 'm3772qunbgq8adt'
 
-  constructor(apiClient: ApiClient) {
-    this.apiClient = apiClient
+  constructor(apiClient?: ApiClient) {
+    // Wenn kein apiClient übergeben wird, erstellen wir einen Standard-Client
+    this.apiClient = apiClient || new ApiClient({
+      baseURL: import.meta.env.VITE_NOCODB_URL || 'http://localhost:8080',
+      apiKey: import.meta.env.VITE_NOCODB_API_KEY || ''
+    })
+  }
+
+  // Factory-Methode für Singleton-Zugriff
+  static getInstance(): NocoDBService {
+    if (!instance) {
+      instance = new NocoDBService()
+    }
+    return instance
   }
 
   /**
@@ -124,3 +139,8 @@ export class NocoDBService {
 }
 
 export default NocoDBService
+
+// Hook für einfachen Zugriff auf den NocoDBService
+export function useNocoDBService(): NocoDBService {
+  return NocoDBService.getInstance()
+}
