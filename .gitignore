@@ -31,3 +31,6 @@ coverage
 .aider*
 .env
 dev-dist/*
+.env
+.env
+.env
